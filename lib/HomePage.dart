@@ -10,7 +10,7 @@ class ParticipationPage extends StatelessWidget {
         backgroundColor: Colors.black,
         title: Text('Participation', style: TextStyle(color: Colors.white)),
       ),
-      body: CustomBackground(
+      body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lastwinner/AddFurniturePage.dart';
 import 'package:lastwinner/background.dart';
+import 'package:intl/intl.dart';
 
 class AddTicketPage extends StatefulWidget {
   const AddTicketPage({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class AddTicketPage extends StatefulWidget {
 
 class _AddTicketPageState extends State<AddTicketPage> {
   final _formKey = GlobalKey<FormState>();
+  final _ticketIdController = TextEditingController();
   final _ticketNameController = TextEditingController();
   final _ticketPriceController = TextEditingController();
   final _ticketLimitController = TextEditingController();
@@ -19,12 +22,26 @@ class _AddTicketPageState extends State<AddTicketPage> {
 
   @override
   void dispose() {
+    _ticketIdController.dispose();
     _ticketNameController.dispose();
     _ticketPriceController.dispose();
     _ticketLimitController.dispose();
     _dateOfDrawController.dispose();
     _deadlineController.dispose();
     super.dispose();
+  }
+
+  Future<void> _selectDate(TextEditingController controller) async {
+    final DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100));
+    if (selectedDate != null) {
+      final String formattedDate =
+          DateFormat('yyyy-MM-dd').format(selectedDate);
+      controller.text = formattedDate;
+    }
   }
 
   @override
@@ -39,7 +56,8 @@ class _AddTicketPageState extends State<AddTicketPage> {
         ),
         title: const Text('Add Ticket'),
       ),
-      body: CustomBackground(
+      backgroundColor: Colors.brown[300],
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
@@ -48,7 +66,7 @@ class _AddTicketPageState extends State<AddTicketPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
-                  controller: _ticketNameController,
+                  controller: _ticketIdController,
                   decoration: const InputDecoration(
                     labelText: 'Ticket ID',
                   ),
@@ -70,6 +88,7 @@ class _AddTicketPageState extends State<AddTicketPage> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   controller: _ticketPriceController,
                   decoration: const InputDecoration(
                     labelText: ' EditTicket Price',
@@ -81,6 +100,7 @@ class _AddTicketPageState extends State<AddTicketPage> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   controller: _ticketLimitController,
                   decoration: const InputDecoration(
                     labelText: 'Edit Ticket Limit',
@@ -96,10 +116,14 @@ class _AddTicketPageState extends State<AddTicketPage> {
                   decoration: const InputDecoration(
                     filled: true,
                     prefixIcon: Icon(Icons.calendar_today),
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue)),
                     labelText: 'Edit Date of Draw',
                   ),
+                  readOnly: true,
+                  onTap: () {
+                    _selectDate(_dateOfDrawController);
+                  },
                   keyboardType: TextInputType.datetime,
                   validator: (value) {
                     return null;
@@ -109,8 +133,16 @@ class _AddTicketPageState extends State<AddTicketPage> {
                 TextFormField(
                   controller: _deadlineController,
                   decoration: const InputDecoration(
+                    filled: true,
+                    prefixIcon: Icon(Icons.calendar_today),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue)),
                     labelText: 'Deadline',
                   ),
+                  readOnly: true,
+                  onTap: () {
+                    _selectDate(_deadlineController);
+                  },
                   keyboardType: TextInputType.datetime,
                   validator: (value) {
                     return null;

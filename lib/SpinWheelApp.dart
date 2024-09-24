@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-import 'package:lastwinner/background.dart';
-
 void main() {
   runApp(SpinWheelApp());
 }
@@ -60,11 +58,15 @@ class _SpinWheelState extends State<SpinWheel>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Spin the Wheel')),
-      body: CustomBackground(
+      backgroundColor: Colors.brown[300],
+      body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 50,
+              ),
               TextField(
                 controller: _sectionController,
                 decoration: InputDecoration(
@@ -170,13 +172,12 @@ class WheelPainter extends CustomPainter {
     for (int i = 0; i < numSections; i++) {
       textPainter.text = TextSpan(
         text: '${i + 1}',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
           color: Colors.black,
         ),
       );
       textPainter.layout();
-      final double textRadius = radius * (0.8 - (numSections / 100));
       final Offset textOffset = Offset(
         centerX + radius * 0.8 * cos(i * arcAngle + arcAngle / 2),
         centerY + radius * 0.8 * sin(i * arcAngle + arcAngle / 2),
