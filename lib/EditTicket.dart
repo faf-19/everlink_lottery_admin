@@ -32,10 +32,11 @@ class _AddTicketPageState extends State<AddTicketPage> {
   }
 
   Future<void> _selectDate(TextEditingController controller) async {
+    final DateTime now = DateTime.now();
     final DateTime? selectedDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
+        firstDate: now,
         lastDate: DateTime(2100));
     if (selectedDate != null) {
       final String formattedDate =
